@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>Examples</title>
+<!-- css -->
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    #canvas {
+        border: 3px dashed #f00;
+        margin: 20px auto;
+        display: block;
+    }
+</style>
+</head>
+<body>
+
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <script type="text/javascript">
+    window.onload=function(){
+    	var canvas=document.querySelector("#canvas"),
+    		ctx=canvas.getContext("2d"),//获取绘画环境
+    		ball=new Ball(),//实例化构造方法
+    		speed=0.1,
+    		range=100,
+    		angle=0;
+    		ball.x=0;
+    		ball.y=0,
+    		widths=canvas.width/2,
+    		heights=canvas.height/2;
+    		(function drawFrame(){
+    			//requestAnimationFrame可以监听到每一个像素的运动效果，浏览器定义的运动的事件
+    			window.requestAnimationFrame(drawFrame,canvas);
+    			//ctx.clearRect(0,0,canvas.width,canvas.height);
+    			ball.y=heights+range*Math.sin(angle);
+    			ball.x=widths+range*Math.cos(angle);
+    			angle+=speed;
+    			ball.draw(ctx);
+    		})();	
+    }
+     	function Ball(radius,color){
+     		radius=radius || 40;
+     		color=color || randomColor();//color || '#f00';
+     		this.radius=radius;
+     		this.color=color;
+     		this.lineWidth=1;
+     		this.scaleX=1;
+     		this.scaleY=1;
+     		this.rotation=0;
+     	}
+     	Ball.prototype.draw=function(ctx){
+     		//保存
+     		ctx.save();
+     		//效果
+     		ctx.translate(this.x,this.y);//映射位置
+     		ctx.rotate(this.totation);//旋转
+     		ctx.scale(this.scaleX,this.scaleY);//缩放效果
+     		//绘画
+     		ctx.lineWidth=this.lineWidth;
+     		ctx.fillStyle=randomColor();//this.color;
+     		ctx.beginPath();
+     		ctx.arc(0,0,this.radius,0,Math.PI*2,true);
+     		ctx.closePath();//关闭路径
+     		ctx.fill();//实现填充
+     		if(this.lineWidth>0){
+     			ctx.stroke();
+     		}
+     		//释放
+     		ctx.restore();
+     	}
+     	function randomColor(){
+     		var rgb='#';
+     		for(var i=0;i<3;i++){
+     			rgb+=xl(parseInt(Math.random()*256).toString(16));
+     		}
+     		function xl(r){
+     			if(r.length==1) r='0'+r;
+     			return r;
+     		}
+     		return rgb;
+     	}
+    </script>
+</body>
+</html>
